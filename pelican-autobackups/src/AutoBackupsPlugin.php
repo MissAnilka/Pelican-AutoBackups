@@ -4,6 +4,7 @@ namespace PelicanAutoBackups;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use PelicanAutoBackups\Filament\Server\Widgets\AutoBackupWidget;
 
 class AutoBackupsPlugin implements Plugin
 {
@@ -14,13 +15,12 @@ class AutoBackupsPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        // Use discoverWidgets to properly register widgets for each panel
-        $id = str($panel->getId())->title();
-        
-        $panel->discoverWidgets(
-            plugin_path($this->getId(), "src/Filament/{$id}/Widgets"),
-            "PelicanAutoBackups\\Filament\\{$id}\\Widgets"
-        );
+        // Register widgets for the server panel
+        if ($panel->getId() === 'server') {
+            $panel->widgets([
+                AutoBackupWidget::class,
+            ]);
+        }
     }
 
     public function boot(Panel $panel): void

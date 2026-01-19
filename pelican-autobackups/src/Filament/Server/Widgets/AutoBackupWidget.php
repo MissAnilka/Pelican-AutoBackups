@@ -22,7 +22,7 @@ class AutoBackupWidget extends Widget implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string $view = 'pelican-autobackups::widgets.auto-backup-widget';
+    protected string $view = 'pelican-autobackups::widgets.auto-backup-widget';
 
     protected int | string | array $columnSpan = 'full';
 
