@@ -5,9 +5,10 @@
     "version": "1.0.0",
     "description": "Automatic backup scheduling with daily, weekly, and monthly options. Keeps the last 3 backups of each type.",
     "category": "plugin",
+    "url": "https://github.com/MissAnilka/Pelican-AutoBackups",
     "namespace": "PelicanAutoBackups",
     "class": "AutoBackupsPlugin",
     "panels": ["server"],
-    "panel_version": "*",
+    "panel_version": null,
     "update_url": "https://raw.githubusercontent.com/MissAnilka/Pelican-AutoBackups/main/update.json"
 }
