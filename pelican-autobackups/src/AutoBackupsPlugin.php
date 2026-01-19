@@ -14,15 +14,13 @@ class AutoBackupsPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
+        // Use discoverWidgets to properly register widgets for each panel
         $id = str($panel->getId())->title();
-
-        // Only register on server panel
-        if ($panel->getId() === 'server') {
-            $panel->discoverWidgets(
-                plugin_path($this->getId(), "src/Filament/$id/Widgets"),
-                "PelicanAutoBackups\\Filament\\$id\\Widgets"
-            );
-        }
+        
+        $panel->discoverWidgets(
+            plugin_path($this->getId(), "src/Filament/{$id}/Widgets"),
+            "PelicanAutoBackups\\Filament\\{$id}\\Widgets"
+        );
     }
 
     public function boot(Panel $panel): void

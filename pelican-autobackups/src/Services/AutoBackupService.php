@@ -26,6 +26,14 @@ class AutoBackupService
     ) {}
 
     /**
+     * Get the backup limit for a server.
+     */
+    public function getTotalSlots(Server $server): int
+    {
+        return $server->backup_limit ?? 0;
+    }
+
+    /**
      * Process all servers that need automatic backups.
      */
     public function processAllBackups(): void
@@ -165,10 +173,11 @@ class AutoBackupService
         ]);
 
         try {
+            // InitiateBackupService->handle(Server $server, ?string $name = null, bool $override = false)
             $this->initiateBackupService->handle(
                 $server,
                 $backupName,
-                false // Don't lock the backup
+                true // Override to allow auto-cleanup of old backups
             );
         } catch (\Exception $e) {
             Log::error("[AutoBackups] Failed to create {$type} backup for server {$server->id}", [
@@ -247,13 +256,5 @@ class AutoBackupService
         $currentBackups = Backup::where('server_id', $server->id)->count();
         
         return max(0, $backupLimit - $currentBackups);
-    }
-
-    /**
-     * Get total backup slots for a server.
-     */
-    public function getTotalSlots(Server $server): int
-    {
-        return $server->backup_limit ?? 0;
     }
 }

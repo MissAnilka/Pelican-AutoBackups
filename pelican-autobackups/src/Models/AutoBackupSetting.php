@@ -27,7 +27,6 @@ class AutoBackupSetting extends Model
         'daily_enabled' => 'boolean',
         'weekly_enabled' => 'boolean',
         'monthly_enabled' => 'boolean',
-        'backup_time' => 'datetime:H:i:s',
         'weekly_day' => 'integer',
         'monthly_day' => 'integer',
         'last_daily_backup' => 'datetime',

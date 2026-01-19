@@ -13,6 +13,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\HtmlString;
 use PelicanAutoBackups\Models\AutoBackupSetting;
 use PelicanAutoBackups\Services\AutoBackupService;
@@ -35,36 +36,65 @@ class AutoBackupWidget extends Widget implements HasForms
     public int $usedSlots = 0;
     public int $autoBackupSlots = 0;
 
+    public static function canView(): bool
+    {
+        // Only show on server panel and when table exists
+        try {
+            if (!Schema::hasTable('auto_backup_settings')) {
+                return false;
+            }
+            
+            $panel = filament();
+            if (!$panel || $panel->getId() !== 'server') {
+                return false;
+            }
+            
+            return $panel->getTenant() !== null;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
     public function mount(): void
     {
-        $this->server = filament()->getTenant();
-        
-        if (!$this->server) {
+        try {
+            $this->server = filament()->getTenant();
+            
+            if (!$this->server) {
+                return;
+            }
+
+            // Check if table exists before querying
+            if (!Schema::hasTable('auto_backup_settings')) {
+                return;
+            }
+
+            $this->setting = AutoBackupSetting::firstOrCreate(
+                ['server_id' => $this->server->id],
+                [
+                    'daily_enabled' => false,
+                    'weekly_enabled' => false,
+                    'monthly_enabled' => false,
+                    'backup_time' => '03:00:00',
+                    'weekly_day' => 0,
+                    'monthly_day' => 1,
+                ]
+            );
+
+            $this->calculateSlotUsage();
+
+            $this->form->fill([
+                'daily_enabled' => $this->setting->daily_enabled,
+                'weekly_enabled' => $this->setting->weekly_enabled,
+                'monthly_enabled' => $this->setting->monthly_enabled,
+                'backup_time' => $this->setting->backup_time,
+                'weekly_day' => $this->setting->weekly_day,
+                'monthly_day' => $this->setting->monthly_day,
+            ]);
+        } catch (\Throwable $e) {
+            // Silently fail if there's any database issue
             return;
         }
-
-        $this->setting = AutoBackupSetting::firstOrCreate(
-            ['server_id' => $this->server->id],
-            [
-                'daily_enabled' => false,
-                'weekly_enabled' => false,
-                'monthly_enabled' => false,
-                'backup_time' => '03:00:00',
-                'weekly_day' => 0,
-                'monthly_day' => 1,
-            ]
-        );
-
-        $this->calculateSlotUsage();
-
-        $this->form->fill([
-            'daily_enabled' => $this->setting->daily_enabled,
-            'weekly_enabled' => $this->setting->weekly_enabled,
-            'monthly_enabled' => $this->setting->monthly_enabled,
-            'backup_time' => $this->setting->backup_time,
-            'weekly_day' => $this->setting->weekly_day,
-            'monthly_day' => $this->setting->monthly_day,
-        ]);
     }
 
     protected function calculateSlotUsage(): void
