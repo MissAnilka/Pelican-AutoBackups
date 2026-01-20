@@ -1,8 +1,12 @@
 <?php
 
 return [
-    // Widget title and description
-    'title' => 'Automatic Backups',
+    // Navigation
+    'navigation' => 'Auto Backups',
+    
+    // Page title and description
+    'title' => 'Auto Backups',
+    'settings_title' => 'Automatic Backup Settings',
     'description' => 'Configure automatic backup schedules for your server. Each backup type keeps the last 3 backups.',
 
     // Backup types
@@ -33,23 +37,31 @@ return [
     // Slot information
     'total_slots' => 'Total Slots',
     'used_slots' => 'Used Slots',
-    'available_slots' => 'Available Slots',
+    'available_slots' => 'Available',
+    'auto_backup_slots' => 'Auto-Backup Needs',
+    'no_backup_slots' => 'This server has no backup slots configured.',
     
-    // Warnings
+    // Warnings and errors
     'low_slots_warning' => 'Low backup slots available',
-    'low_slots_description' => 'Each automatic backup type requires 3 slots to store the backup history. You may not be able to enable all backup types.',
-    'not_enough_slots_title' => 'Not enough backup slots',
-    'not_enough_slots_body' => 'You need :required backup slots for this configuration, but your server only has :available slots. Please disable some backup types or request more backup slots from your administrator.',
+    'low_slots_description' => 'Each automatic backup type requires 3 slots to store the backup history.',
+    'not_enough_slots' => 'Not Enough Slots',
+    'not_enough_slots_title' => 'Not Enough Backup Slots',
+    'not_enough_slots_body' => 'You need :required backup slots for this configuration, but your server only has :available slots.',
+    'slots_warning' => 'You need :required slots for auto-backups, but only :available are available.',
+    'error' => 'Error',
+    'cannot_save' => 'Cannot Save',
+    'slots_exceeded' => 'The required backup slots exceed your total available slots.',
 
     // Actions
     'save' => 'Save Settings',
+    'saved' => 'Settings saved successfully!',
     'saved_title' => 'Settings Saved',
     'saved_body' => 'Your automatic backup settings have been saved successfully.',
 
     // Backup naming
     'backup_names' => [
-        'daily' => '[Auto] Daily - :date',
-        'weekly' => '[Auto] Weekly - Week :week :year',
-        'monthly' => '[Auto] Monthly - :month :year',
+        'daily' => 'Auto-Daily',
+        'weekly' => 'Auto-Weekly', 
+        'monthly' => 'Auto-Monthly',
     ],
 ];

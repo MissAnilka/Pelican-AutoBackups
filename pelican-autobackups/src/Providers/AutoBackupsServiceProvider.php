@@ -2,8 +2,11 @@
 
 namespace PelicanAutoBackups\Providers;
 
+use App\Enums\HeaderWidgetPosition;
+use App\Filament\Server\Resources\Backups\Pages\ListBackups;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
+use PelicanAutoBackups\Filament\Server\Widgets\AutoBackupSettingsWidget;
 use PelicanAutoBackups\Services\AutoBackupService;
 
 class AutoBackupsServiceProvider extends ServiceProvider
@@ -15,6 +18,9 @@ class AutoBackupsServiceProvider extends ServiceProvider
     {
         // Register the service
         $this->app->singleton(AutoBackupService::class);
+
+        // Register the widget on the backups list page
+        ListBackups::registerCustomHeaderWidgets(HeaderWidgetPosition::Before, AutoBackupSettingsWidget::class);
     }
 
     /**
